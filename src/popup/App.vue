@@ -6,7 +6,7 @@
     <div class="container">
       <div v-if="urlTrue">
         <h2>Do you want to get the entire member list of this group?</h2>
-        <button>Get Links Profile</button>
+        <button @click="getLinks">Get Links Profile</button>
       </div>
       <div v-if="!urlTrue">
         <h2>You need to access the group that you have joined in order for the tool to work!</h2>
@@ -25,35 +25,36 @@ export default {
     };
   },
   mounted() {
-    // var self = this;
-    // window.addEventListener("DOMContentLoaded", function() {
-    //   chrome.tabs.query(
-    //     {
-    //       active: true,
-    //       currentWindow: true
-    //     },
-    //     function(tabs) {
-    //       var url = tabs[0].url;
-    //       var checkUrlFb = /https:\/\/www.facebook.com\/groups\/*/;
-    //       if (checkUrlFb.test(url)) {
-    //         self.urlTrue = true;
-    //         chrome.tabs.sendMessage(
-    //           tabs[0].id,
-    //           { from: "popup", subject: "DOMInfo" },
-    //           self.setDOMInfo
-    //         );
-    //       }
-    //     }
-    //   );
-    // });
-    console.log(this);
+    var self = this;
+    window.addEventListener("DOMContentLoaded", function() {
+      chrome.tabs.query(
+        {
+          active: true,
+          currentWindow: true
+        },
+        function(tabs) {
+          var url = tabs[0].url;
+          var checkUrlFb = /https:\/\/www.facebook.com\/groups\/*/;
+          if (checkUrlFb.test(url)) {
+            self.urlTrue = true;
+          }
+        }
+      );
+    });
   },
   methods: {
-    setDOMInfo(res) {
-      console.log("res", res);
-    },
+    setDOMInfo(res) {},
     getLinks() {
-      console.log(this.$route.query.page);
+      var self = this;
+      chrome.tabs.query(
+        {
+          active: true,
+          currentWindow: true
+        },
+        function(tabs) {
+          chrome.tabs.sendMessage(tabs[0].id, { get: true }, self.setDOMInfo);
+        }
+      );
     }
   }
 };

@@ -12,6 +12,7 @@ const config = {
   entry: {
     background: './background.js',
     content: './content.js',
+    'jquery.3.4.1.min': './jquery.3.4.1.min.js',
     'popup/popup': './popup/popup.js'
   },
   output: {

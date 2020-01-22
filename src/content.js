@@ -1,4 +1,8 @@
 chrome.runtime.onMessage.addListener(function(msg, sender, response) {
-  console.log(msg);
+  if (msg.get) {
+    // var url = tabs[0].url + '/members/';
+    // window.location.replace(url);
+    console.log(window);
+  }
   response(msg);
 });
