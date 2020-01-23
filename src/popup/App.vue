@@ -21,7 +21,8 @@ export default {
   data() {
     return {
       keyword: "",
-      urlTrue: false
+      urlTrue: false,
+      trigger: false
     };
   },
   mounted() {
@@ -41,18 +42,39 @@ export default {
         }
       );
     });
+
+    chrome.runtime.onMessage.addListener(function(
+      message,
+      sender,
+      sendResponse
+    ) {
+      console.log(message);
+
+      if (message.msg === "getStatusTrigger") {
+        sendResponse({
+          data: self.trigger
+        });
+      }
+    });
   },
   methods: {
-    setDOMInfo(res) {},
+    setDOMInfo(res) {
+      console.log("setDOMInfo", res);
+    },
     getLinks() {
       var self = this;
+      this.trigger = true;
       chrome.tabs.query(
         {
           active: true,
           currentWindow: true
         },
         function(tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, { get: true }, self.setDOMInfo);
+          chrome.tabs.sendMessage(
+            tabs[0].id,
+            { trigger: true },
+            self.setDOMInfo
+          );
         }
       );
     }
