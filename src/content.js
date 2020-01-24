@@ -30,10 +30,26 @@ $(document).ready(async function() {
             if (totalHeight >= scrollHeight) {
               if ($('span.uiMorePagerLoader.pam.uiBoxLightblue').length === 0) {
                 clearInterval(timer);
-                resolve();
+                var listItem = $('a._60rg._8o._8r.lfloat._ohe');
+                var arrayProfile = [];
+                for (var i = 0; i < listItem.length; i++) {
+                  arrayProfile.push({
+                    Name: listItem[i].title,
+                    Link: listItem[i].href
+                  });
+                }
+                chrome.runtime.sendMessage(
+                  {
+                    msg: 'arrayProfile',
+                    data: arrayProfile
+                  },
+                  function(res) {
+                    console.log(res);
+                  }
+                );
               }
             }
-          }, 100);
+          }, 10);
         }
       }
     );

@@ -9,25 +9,29 @@
         <button @click="getLinks">Get Links Profile</button>
       </div>
       <div v-if="!urlTrue">
-        <h2>You need to access the group that you have joined in order for the tool to work!</h2>
+        <h2>
+          You need to access the group that you have joined in order for the
+          tool to work!
+        </h2>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-const browser = require("webextension-polyfill");
+const browser = require('webextension-polyfill');
+import XLSX from 'xlsx';
 export default {
   data() {
     return {
-      keyword: "",
+      keyword: '',
       urlTrue: false,
       trigger: false
     };
   },
   mounted() {
     var self = this;
-    window.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener('DOMContentLoaded', function() {
       chrome.tabs.query(
         {
           active: true,
@@ -48,18 +52,26 @@ export default {
       sender,
       sendResponse
     ) {
-      console.log(message);
-
-      if (message.msg === "getStatusTrigger") {
+      if (message.msg === 'getStatusTrigger') {
         sendResponse({
           data: self.trigger
+        });
+      }
+
+      if (message.msg === 'arrayProfile') {
+        var ws = XLSX.utils.json_to_sheet(message.data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'link');
+        XLSX.writeFile(wb, 'linksProfile.xlsx');
+        sendResponse({
+          received: true
         });
       }
     });
   },
   methods: {
     setDOMInfo(res) {
-      console.log("setDOMInfo", res);
+      console.log('setDOMInfo', res);
     },
     getLinks() {
       var self = this;

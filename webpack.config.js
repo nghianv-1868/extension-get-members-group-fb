@@ -43,7 +43,11 @@ const config = {
       },
       {
         test: /\.sass$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?indentedSyntax']
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader?indentedSyntax'
+        ]
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg|ico)$/,
@@ -75,11 +79,15 @@ const config = {
     }),
     new CopyPlugin([
       { from: 'icons', to: 'icons', ignore: ['icon.xcf'] },
-      { from: 'popup/popup.html', to: 'popup/popup.html', transform: transformHtml },
+      {
+        from: 'popup/popup.html',
+        to: 'popup/popup.html',
+        transform: transformHtml
+      },
       {
         from: 'manifest.json',
         to: 'manifest.json',
-        transform: (content) => {
+        transform: content => {
           const jsonContent = JSON.parse(content);
           jsonContent.version = version;
 
