@@ -15,6 +15,7 @@
     {
       "matches": ["https://www.facebook.com/groups/*"],
       "js": ["jquery.3.4.1.min.js", "content.js"],
+      "css": ["content.css"],
       "run_at": "document_start"
     }
   ],
