@@ -5,10 +5,11 @@
     </div>
     <div class="container">
       <div v-if="urlTrue">
-        <h2>Do you want to get the entire member list of this group?</h2>
-        <button class="c-smileyButton" @click="getLinks" v-if="!processing">
-          <span class="c-smileyButton__face"></span>
-          &nbsp;Get Profiles
+        <button class="learn-more" @click="getLinks" v-if="!processing">
+          <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+          </span>
+          <span class="button-text">Get Profiles</span>
         </button>
         <div class="load-9" v-if="processing">
           <p>Processing</p>
@@ -56,29 +57,29 @@ export default {
           }
         }
       );
-    });
 
-    chrome.runtime.onMessage.addListener(function(
-      message,
-      sender,
-      sendResponse
-    ) {
-      if (message.msg === "getStatusTrigger") {
-        sendResponse({
-          data: self.trigger
-        });
-      }
+      chrome.runtime.onMessage.addListener(function(
+        message,
+        sender,
+        sendResponse
+      ) {
+        if (message.msg === "getStatusTrigger") {
+          sendResponse({
+            data: self.trigger
+          });
+        }
 
-      if (message.msg === "arrayProfile") {
-        var ws = XLSX.utils.json_to_sheet(message.data);
-        var wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "link");
-        XLSX.writeFile(wb, "linksProfile.xlsx");
-        self.processing = false;
-        sendResponse({
-          received: true
-        });
-      }
+        if (message.msg === "arrayProfile") {
+          var ws = XLSX.utils.json_to_sheet(message.data);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "link");
+          XLSX.writeFile(wb, "linksProfile.xlsx");
+          self.processing = false;
+          sendResponse({
+            received: true
+          });
+        }
+      });
     });
   },
   methods: {
@@ -150,86 +151,6 @@ p {
 .extension {
   min-width: 300px;
   text-align: center;
-}
-
-// Css button
-.c-smileyButton {
-  font-size: 25px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  color: $white;
-
-  border: 0;
-  outline: 0;
-
-  align-items: center;
-  justify-content: center;
-
-  position: relative;
-  height: 2.5em;
-  padding: 0.5em 0.75em;
-  border-radius: 0.25em;
-  box-sizing: border-box;
-  background-color: $perfume;
-  box-shadow: 0 0.15em 1em rgba($black, 0.2);
-  z-index: 1;
-
-  &:hover .c-smileyButton__face::before {
-    content: "\1F618";
-    animation: animate 1.05s infinite;
-  }
-
-  // cursor fix
-  &::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    z-index: 1;
-  }
-}
-
-.c-smileyButton__face::before {
-  content: "\1F614";
-}
-
-.c-smileyButton__hoverListener {
-  position: absolute;
-  cursor: default;
-  z-index: -1;
-
-  @if $debug {
-    background-color: rgba($red, 0.2);
-  }
-
-  &:hover ~ .c-smileyButton__face::before {
-    animation: none;
-  }
-
-  &:nth-child(1) {
-    width: 290%;
-    height: 550%;
-
-    &:hover ~ .c-smileyButton__face::before {
-      content: "\1F60C";
-    }
-  }
-
-  &:nth-child(2) {
-    width: 190%;
-    height: 330%;
-
-    &:hover ~ .c-smileyButton__face::before {
-      content: "\1F61A";
-    }
-  }
-}
-
-@keyframes animate {
-  100% {
-    content: "\1F60A";
-  }
 }
 
 // css loading
@@ -308,6 +229,115 @@ p {
   }
   50% {
     transform: scale(1);
+  }
+}
+
+// Css button
+@import url("https://fonts.googleapis.com/css?family=Mukta:700");
+
+$bg: #f3f8fa;
+$white: #fff;
+$black: #282936;
+
+@mixin transition(
+  $property: all,
+  $duration: 0.45s,
+  $ease: cubic-bezier(0.65, 0, 0.076, 1)
+) {
+  transition: $property $duration $ease;
+}
+
+* {
+  box-sizing: border-box;
+  &::before,
+  &::after {
+    box-sizing: border-box;
+  }
+}
+
+button {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  &.learn-more {
+    width: 12rem;
+    height: auto;
+    .circle {
+      @include transition(all, 0.45s, cubic-bezier(0.65, 0, 0.076, 1));
+      position: relative;
+      display: block;
+      margin: 0;
+      width: 3rem;
+      height: 3rem;
+      background: $black;
+      border-radius: 1.625rem;
+      .icon {
+        @include transition(all, 0.45s, cubic-bezier(0.65, 0, 0.076, 1));
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        background: $white;
+        &.arrow {
+          @include transition(all, 0.45s, cubic-bezier(0.65, 0, 0.076, 1));
+          left: 1.2rem;
+          width: 0.125rem;
+          height: 1.125rem;
+          background: none;
+          transform: rotate(-90deg);
+          background: none;
+          &::before {
+            position: absolute;
+            content: "";
+            top: 0.45rem;
+            left: -0.25rem;
+            width: 0.625rem;
+            height: 0.625rem;
+            border-bottom: 0.125rem solid #fff;
+            border-right: 0.125rem solid #fff;
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+          }
+        }
+      }
+    }
+    .button-text {
+      @include transition(all, 0.45s, cubic-bezier(0.65, 0, 0.076, 1));
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0.75rem 0;
+      margin: 0 0 0 1.85rem;
+      color: $black;
+      font-weight: 700;
+      line-height: 1.6;
+      text-align: center;
+      text-transform: uppercase;
+    }
+  }
+  &:hover {
+    .circle {
+      width: 100%;
+      .icon {
+        &.arrow {
+          background: $white;
+          transform: translate(1rem, 0);
+        }
+      }
+    }
+    .button-text {
+      color: $white;
+    }
   }
 }
 </style>

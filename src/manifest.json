@@ -13,14 +13,14 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.facebook.com/groups/*"],
-      "js": ["jquery.3.4.1.min.js", "content.js"],
-      "css": ["content.css"],
+      "matches": ["https://www.facebook.com/*"],
+      "js": ["content/jquery.3.4.1.min.js", "content/content.js"],
+      "css": ["content/content.css"],
       "run_at": "document_start"
     }
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background/background.js"]
   },
   "permissions": ["tabs", "activeTab"]
 }

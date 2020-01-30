@@ -10,9 +10,9 @@ const config = {
   mode: process.env.NODE_ENV,
   context: __dirname + '/src',
   entry: {
-    background: './background.js',
-    content: './content.js',
-    'jquery.3.4.1.min': './jquery.3.4.1.min.js',
+    'background/background': './background/background.js',
+    'content/content': './content/content.js',
+    'content/jquery.3.4.1.min': './content/jquery.3.4.1.min.js',
     'popup/popup': './popup/popup.js'
   },
   output: {
@@ -43,11 +43,7 @@ const config = {
       },
       {
         test: /\.sass$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'sass-loader?indentedSyntax'
-        ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?indentedSyntax']
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg|ico)$/,
@@ -87,7 +83,7 @@ const config = {
       {
         from: 'manifest.json',
         to: 'manifest.json',
-        transform: content => {
+        transform: (content) => {
           const jsonContent = JSON.parse(content);
           jsonContent.version = version;
 
