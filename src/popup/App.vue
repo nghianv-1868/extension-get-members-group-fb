@@ -11,6 +11,12 @@
           </span>
           <span class="button-text">Get Profiles</span>
         </button>
+        <button class="learn-more" @click="exportExcel" v-if="processing">
+          <span class="circle" aria-hidden="true">
+            <span class="icon arrow"></span>
+          </span>
+          <span class="button-text">Export Excel</span>
+        </button>
         <div class="load-9" v-if="processing">
           <p>Processing</p>
           <div class="spinner">
@@ -38,18 +44,18 @@ export default {
       keyword: "",
       urlTrue: false,
       trigger: false,
-      processing: false
+      processing: false,
     };
   },
   mounted() {
     var self = this;
-    window.addEventListener("DOMContentLoaded", function() {
+    window.addEventListener("DOMContentLoaded", function () {
       chrome.tabs.query(
         {
           active: true,
-          currentWindow: true
+          currentWindow: true,
         },
-        function(tabs) {
+        function (tabs) {
           var url = tabs[0].url;
           var checkUrlFb = /https:\/\/www.facebook.com\/groups\/*/;
           if (checkUrlFb.test(url)) {
@@ -58,14 +64,14 @@ export default {
         }
       );
 
-      chrome.runtime.onMessage.addListener(function(
+      chrome.runtime.onMessage.addListener(function (
         message,
         sender,
         sendResponse
       ) {
         if (message.msg === "getStatusTrigger") {
           sendResponse({
-            data: self.trigger
+            data: self.trigger,
           });
         }
 
@@ -76,7 +82,7 @@ export default {
           XLSX.writeFile(wb, "linksProfile.xlsx");
           self.processing = false;
           sendResponse({
-            received: true
+            received: true,
           });
         }
       });
@@ -93,9 +99,9 @@ export default {
       chrome.tabs.query(
         {
           active: true,
-          currentWindow: true
+          currentWindow: true,
         },
-        function(tabs) {
+        function (tabs) {
           chrome.tabs.sendMessage(
             tabs[0].id,
             { trigger: true },
@@ -103,8 +109,23 @@ export default {
           );
         }
       );
-    }
-  }
+    },
+    exportExcel() {
+      chrome.tabs.query(
+        {
+          active: true,
+          currentWindow: true,
+        },
+        function (tabs) {
+          chrome.tabs.sendMessage(
+            tabs[0].id,
+            { export: true },
+            self.setDOMInfo
+          );
+        }
+      );
+    },
+  },
 };
 </script>
 
